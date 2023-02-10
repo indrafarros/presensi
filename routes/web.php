@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PresensiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('layouts.main');
+
+Route::get('/', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'auth']);
+
+Route::middleware(['guest'])->group(function () {
 });
 
-Route::get('/home', [DashboardController::class, 'index']);
+Route::middleware(['auth:employee'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/presensi/create', [PresensiController::class, 'create']);
+
+    Route::get('/logout', [AuthController::class, 'logout']);
+});

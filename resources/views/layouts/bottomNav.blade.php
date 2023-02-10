@@ -1,19 +1,20 @@
 <div class="appBottomMenu">
-    <a href="#" class="item">
+    <a href="/dashboard" class="item @if (request()->route()->uri == 'dashboard') active @endif">
         <div class="col">
-            <ion-icon name="file-tray-full-outline" role="img" class="md hydrated" aria-label="file tray full outline">
+            <ion-icon name="home-outline" class="md hydrated"></ion-icon>
+            {{-- <ion-icon name="file-tray-full-outline" role="img" class="md hydrated" aria-label="file tray full outline"> --}}
             </ion-icon>
-            <strong>Today</strong>
+            <strong>Dashboard</strong>
         </div>
     </a>
-    <a href="#" class="item active">
+    <a href="#" class="item @if (request()->route()->uri == 'presensi/calendar') active @endif">
         <div class="col">
             <ion-icon name="calendar-outline" role="img" class="md hydrated" aria-label="calendar outline">
             </ion-icon>
             <strong>Calendar</strong>
         </div>
     </a>
-    <a href="#" class="item">
+    <a href="/presensi/create" class="item">
         <div class="col">
             <div class="action-button large">
                 <ion-icon name="camera" role="img" class="md hydrated" aria-label="add outline"></ion-icon>

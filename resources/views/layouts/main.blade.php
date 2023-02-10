@@ -28,14 +28,14 @@
     </div>
     <!-- * loader -->
 
+    @yield('header')
 
-
-    <!-- App Capsule -->
+    <!-- App COntent -->
 
     <div id="appCapsule">
         @yield('content')
     </div>
-    <!-- * App Capsule -->
+    <!-- * App Content -->
 
 
     <!-- App Bottom Menu -->
