@@ -13,6 +13,7 @@
  <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
  <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
  <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+ <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
  <!-- Base Js File -->
  <script src="{{ asset('assets/js/base.js') }}"></script>

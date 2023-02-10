@@ -29,7 +29,6 @@
     </style>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 @endsection
 
@@ -44,7 +43,7 @@
 
     <div class="row">
         <button type="button" class="btn btn-primary btn-block" id="absen">
-            <ion-icon name="save-outline"></ion-icon> Absen
+            <ion-icon name="save-outline"></ion-icon> Absen Now !
         </button>
     </div>
 
@@ -96,5 +95,34 @@
         function errorCallBack() {
 
         }
+
+        $('#absen').click(function(e) {
+            if (lokasi.value != '') {
+                Webcam.snap(function(uri) {
+                    image = uri
+                });
+                $.ajax({
+                    url: "/presensi/store",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        image: image,
+                        location: lokasi.value
+                    },
+                    cache: false,
+                    success: function(response) {
+                        Swal.fire({
+                            position: 'center-start',
+                            icon: 'success',
+                            title: 'Your work has been saved',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                })
+            } else {
+                alert('Something wrong, refresh your browser and try again');
+            }
+        })
     </script>
 @endpush
