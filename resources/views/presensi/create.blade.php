@@ -41,10 +41,19 @@
         </div>
     </div>
 
-    <div class="row">
-        <button type="button" class="btn btn-primary btn-block" id="absen">
-            <ion-icon name="save-outline"></ion-icon> Absen Now !
-        </button>
+    <div class="row p-2">
+        @if ($presensi == null)
+            <button type="button" class="btn btn-primary btn-block" id="absen">
+                <ion-icon name="save-outline"></ion-icon> Absen Masuk
+            </button>
+        @elseif ($presensi->clock_in != null && $presensi->clock_out == null)
+            <button type="button" class="btn btn-danger btn-block" id="absen">
+                Absen Pulang
+            </button>
+        @else
+            <a href="/dashboard" class="btn btn-warning btn-block">Sudah melakukan absen</a>
+        @endif
+
     </div>
 
     <div class="row mt-5">
@@ -112,12 +121,19 @@
                     cache: false,
                     success: function(response) {
                         Swal.fire({
-                            position: 'center-start',
+                            text: response.message,
                             icon: 'success',
-                            title: 'Your work has been saved',
-                            showConfirmButton: false,
-                            timer: 1500
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/dashboard';
+                            }
                         })
+                    },
+                    error: function(error) {
+                        console.log(error.responseJSON.errors)
                     }
                 })
             } else {

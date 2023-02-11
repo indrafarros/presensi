@@ -12,29 +12,27 @@ class PresensiController extends Controller
 {
     public function create()
     {
-        return view('presensi.create');
+        $nik = Auth::guard('employee')->user()->nik;
+        $today = Carbon::now()->toDateString();
+        $presensi = Presensi::where('nik', $nik)->where('presensi_date', $today)->first();
+        return view('presensi.create', ['presensi' => $presensi]);
     }
 
     public function store(Request $request)
     {
-
         $validate = $request->validate([
             'image' => 'required',
             'location' => 'required'
         ]);
+
         $today = Carbon::now()->toDateString();
         $nik = Auth::guard('employee')->user()->nik;
         // check presensi today
         $presensiToday = Presensi::where('nik', $nik)->where('presensi_date', $today)->count();
-        if ($presensiToday > 0) {
-            return response()->json(['message' => 'Hari ini sudah melakukan absensi'], 200);
-        }
-
         // end check today
 
         $request['nik'] = $nik;
         $request['presensi_date'] = $today;
-        $request['clock_in'] = Carbon::now()->toTimeString();
 
         if ($request->image) {
             $imageParts = explode(";base64", $request->image);
@@ -45,9 +43,16 @@ class PresensiController extends Controller
             Storage::put($folderPath . $fileName, $imageDecode);
             $request['photo_in'] = $fileName;
         }
+        if ($presensiToday < 1) {
+            $request['location_in'] = $request->location;
+            $request['clock_in'] = Carbon::now()->toTimeString();
+            Presensi::create($request->all());
+        } else {
+            $request['location_out'] = $request->location;
+            $request['clock_out'] = Carbon::now()->toTimeString();
+            Presensi::where('nik', $nik)->update(['clock_out' => $request['clock_out'], 'photo_out' => $request['photo_in'], 'location_out' => $request['location_out']]);
+        }
 
-        Presensi::create($request->all());
-
-        return response()->json(['message' => "ok"], 200);
+        return response()->json(["status" => true, "message" => 'Success'], 200);
     }
 }
