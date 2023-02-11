@@ -33,6 +33,16 @@ class PresensiController extends Controller
 
         $request['nik'] = $nik;
         $request['presensi_date'] = $today;
+        $officeCoordinat = '-6.242722057456307, 107.0485064442227';
+        $officeExplode = explode(",", $officeCoordinat);
+
+        $locationExplode = explode(",", $request->location);
+        $distance = $this->getDistance($officeExplode[0], $officeExplode[1], $locationExplode[0], $locationExplode[1]);
+        $radius = round($distance["meters"]);
+
+        if ($radius > 20) {
+            return response()->json(['message' => 'Anda berada diluar radius'], 400);
+        }
 
         if ($request->image) {
             $imageParts = explode(";base64", $request->image);
@@ -54,5 +64,19 @@ class PresensiController extends Controller
         }
 
         return response()->json(["status" => true, "message" => 'Success'], 200);
+    }
+
+    function getDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $theta = $lon1 - $lon2;
+        $miles = (sin(deg2rad($lat1)) * sin(deg2rad($lat2))) + (cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta)));
+        $miles = acos($miles);
+        $miles = rad2deg($miles);
+        $miles = $miles * 60 * 1.1515;
+        $feet  = $miles * 5280;
+        $yards = $feet / 3;
+        $kilometers = $miles * 1.609344;
+        $meters = $kilometers * 1000;
+        return compact('meters');
     }
 }

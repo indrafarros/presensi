@@ -92,12 +92,11 @@
             }).addTo(map)
 
             var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
-
-            var circle = L.circle([position.coords.latitude, position.coords.longitude], {
+            var circle = L.circle([-6.242722057456307, 107.0485064442227], {
                 color: 'red',
                 fillColor: '#f03',
                 fillOpacity: 0.1,
-                radius: 50
+                radius: 20
             }).addTo(map);
         }
 
@@ -133,11 +132,19 @@
                         })
                     },
                     error: function(error) {
-                        console.log(error.responseJSON.errors)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: error.responseJSON.message,
+                        })
                     }
                 })
             } else {
-                alert('Something wrong, refresh your browser and try again');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something wrong, refresh your browser and try again',
+                })
             }
         })
     </script>
