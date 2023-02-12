@@ -1,5 +1,5 @@
     @extends('layouts.main')
-
+    @section('title', 'Dashboard')
     @section('content')
         <div class="section" id="user-section">
             <div id="user-detail">
@@ -7,8 +7,8 @@
                     <img src="assets/img/sample/avatar/avatar1.jpg" alt="avatar" class="imaged w64 rounded">
                 </div>
                 <div id="user-info">
-                    <h2 id="user-name">{{ ucfirst(Auth::guard()->user()->name) }}</h2>
-                    <span id="user-role">Head of IT</span>
+                    <h2 id="user-name">{{ ucfirst($user->name) }}</h2>
+                    <span id="user-role">{{ ucfirst($user->roles->name) }}</span>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
                     <div class="list-menu">
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                                <a href="" class="green" style="font-size: 40px;">
+                                <a href="/profile" class="green" style="font-size: 40px;">
                                     <ion-icon name="person-sharp"></ion-icon>
                                 </a>
                             </div>
@@ -63,13 +63,27 @@
         </div>
         <div class="section mt-2" id="presence-section">
             <div class="todaypresence">
-                <div class="row">
+                <div class="row d-flex justify-content-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="time"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
                     <div class="col-6">
                         <div class="card gradasigreen">
                             <div class="card-body">
                                 <div class="presencecontent">
                                     <div class="iconpresence">
-                                        <ion-icon name="camera"></ion-icon>
+                                        @if ($presensi != null && $presensi->photo_in != null)
+                                            <img width="50px"
+                                                src="{{ Storage::url('uploads/presensi/' . $presensi->photo_in) }}"
+                                                alt="">
+                                        @else
+                                            <ion-icon name="camera"></ion-icon>
+                                        @endif
+                                        {{-- <ion-icon name="camera"></ion-icon> --}}
                                     </div>
                                     <div class="presencedetail">
                                         <h4 class="presencetitle">Masuk</h4>
@@ -88,7 +102,13 @@
                             <div class="card-body">
                                 <div class="presencecontent">
                                     <div class="iconpresence">
-                                        <ion-icon name="camera"></ion-icon>
+                                        @if ($presensi != null && $presensi->photo_out != null)
+                                            <img width="50px"
+                                                src="{{ Storage::url('uploads/presensi/' . $presensi->photo_out) }}"
+                                                alt="">
+                                        @else
+                                            <ion-icon name="camera"></ion-icon>
+                                        @endif
                                     </div>
                                     <div class="presencedetail">
                                         <h4 class="presencetitle">Pulang</h4>
@@ -105,73 +125,6 @@
                 </div>
             </div>
 
-            <div class="rekappresence">
-                <div id="chartdiv"></div>
-                <!-- <div class="row">
-                                                                                                                    <div class="col-6">
-                                                                                                                        <div class="card">
-                                                                                                                            <div class="card-body">
-                                                                                                                                <div class="presencecontent">
-                                                                                                                                    <div class="iconpresence primary">
-                                                                                                                                        <ion-icon name="log-in"></ion-icon>
-                                                                                                                                    </div>
-                                                                                                                                    <div class="presencedetail">
-                                                                                                                                        <h4 class="rekappresencetitle">Hadir</h4>
-                                                                                                                                        <span class="rekappresencedetail">0 Hari</span>
-                                                                                                                                    </div>
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                    <div class="col-6">
-                                                                                                                        <div class="card">
-                                                                                                                            <div class="card-body">
-                                                                                                                                <div class="presencecontent">
-                                                                                                                                    <div class="iconpresence green">
-                                                                                                                                        <ion-icon name="document-text"></ion-icon>
-                                                                                                                                    </div>
-                                                                                                                                    <div class="presencedetail">
-                                                                                                                                        <h4 class="rekappresencetitle">Izin</h4>
-                                                                                                                                        <span class="rekappresencedetail">0 Hari</span>
-                                                                                                                                    </div>
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                                <div class="row mt-1">
-                                                                                                                    <div class="col-6">
-                                                                                                                        <div class="card">
-                                                                                                                            <div class="card-body">
-                                                                                                                                <div class="presencecontent">
-                                                                                                                                    <div class="iconpresence warning">
-                                                                                                                                        <ion-icon name="sad"></ion-icon>
-                                                                                                                                    </div>
-                                                                                                                                    <div class="presencedetail">
-                                                                                                                                        <h4 class="rekappresencetitle">Sakit</h4>
-                                                                                                                                        <span class="rekappresencedetail">0 Hari</span>
-                                                                                                                                    </div>
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                    <div class="col-6">
-                                                                                                                        <div class="card">
-                                                                                                                            <div class="card-body">
-                                                                                                                                <div class="presencecontent">
-                                                                                                                                    <div class="iconpresence danger">
-                                                                                                                                        <ion-icon name="alarm"></ion-icon>
-                                                                                                                                    </div>
-                                                                                                                                    <div class="presencedetail">
-                                                                                                                                        <h4 class="rekappresencetitle">Terlambat</h4>
-                                                                                                                                        <span class="rekappresencedetail">0 Hari</span>
-                                                                                                                                    </div>
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div> -->
-            </div>
             <div class="presencetab mt-2">
                 <div class="tab-pane fade show active" id="pilled" role="tabpanel">
                     <ul class="nav nav-tabs style1" role="tablist">
@@ -190,118 +143,33 @@
                 <div class="tab-content mt-2" style="margin-bottom:100px;">
                     <div class="tab-pane fade show active" id="home" role="tabpanel">
                         <ul class="listview image-listview">
-                            <li>
-                                <div class="item">
-                                    <div class="icon-box bg-primary">
-                                        <ion-icon name="image-outline" role="img" class="md hydrated"
-                                            aria-label="image outline"></ion-icon>
+                            @foreach ($presensiUser as $item)
+                                <li>
+                                    <div class="item">
+                                        <div class="icon-box bg-success">
+                                            <ion-icon name="checkmark-outline"></ion-icon>
+                                        </div>
+                                        <div class="in">
+                                            <div> {{ date('d M Y', strtotime($item->presensi_date)) }}</div>
+                                            <span class="badge badge-primary">
+                                                @if ($item->clock_in)
+                                                    {{ date('H:i', strtotime($item->clock_in)) }}
+                                                @else
+                                                    -
+                                                @endif
+                                            </span>
+                                            <span class="badge badge-danger">
+                                                @if ($item->clock_out)
+                                                    {{ date('H:i', strtotime($item->clock_out)) }}
+                                                @else
+                                                    -
+                                                @endif
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div class="in">
-                                        <div>Photos</div>
-                                        <span class="badge badge-danger">10</span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="item">
-                                    <div class="icon-box bg-secondary">
-                                        <ion-icon name="videocam-outline" role="img" class="md hydrated"
-                                            aria-label="videocam outline"></ion-icon>
-                                    </div>
-                                    <div class="in">
-                                        <div>Videos</div>
-                                        <span class="text-muted">None</span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="item">
-                                    <div class="icon-box bg-danger">
-                                        <ion-icon name="musical-notes-outline" role="img" class="md hydrated"
-                                            aria-label="musical notes outline"></ion-icon>
-                                    </div>
-                                    <div class="in">
-                                        <div>Music</div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="item">
-                                    <div class="icon-box bg-danger">
-                                        <ion-icon name="musical-notes-outline" role="img" class="md hydrated"
-                                            aria-label="musical notes outline"></ion-icon>
-                                    </div>
-                                    <div class="in">
-                                        <div>Music</div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="item">
-                                    <div class="icon-box bg-danger">
-                                        <ion-icon name="musical-notes-outline" role="img" class="md hydrated"
-                                            aria-label="musical notes outline"></ion-icon>
-                                    </div>
-                                    <div class="in">
-                                        <div>Music</div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="item">
-                                    <div class="icon-box bg-danger">
-                                        <ion-icon name="musical-notes-outline" role="img" class="md hydrated"
-                                            aria-label="musical notes outline"></ion-icon>
-                                    </div>
-                                    <div class="in">
-                                        <div>Music</div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="item">
-                                    <div class="icon-box bg-danger">
-                                        <ion-icon name="musical-notes-outline" role="img" class="md hydrated"
-                                            aria-label="musical notes outline"></ion-icon>
-                                    </div>
-                                    <div class="in">
-                                        <div>Music</div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="item">
-                                    <div class="icon-box bg-danger">
-                                        <ion-icon name="musical-notes-outline" role="img" class="md hydrated"
-                                            aria-label="musical notes outline"></ion-icon>
-                                    </div>
-                                    <div class="in">
-                                        <div>Music</div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="item">
-                                    <div class="icon-box bg-danger">
-                                        <ion-icon name="musical-notes-outline" role="img" class="md hydrated"
-                                            aria-label="musical notes outline"></ion-icon>
-                                    </div>
-                                    <div class="in">
-                                        <div>Music</div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="item">
-                                    <div class="icon-box bg-danger">
-                                        <ion-icon name="musical-notes-outline" role="img" class="md hydrated"
-                                            aria-label="musical notes outline"></ion-icon>
-                                    </div>
-                                    <div class="in">
-                                        <div>Music</div>
-                                    </div>
-                                </div>
-                            </li>
+                                </li>
+                            @endforeach
+
                         </ul>
                     </div>
                     <div class="tab-pane fade" id="profile" role="tabpanel">
@@ -354,4 +222,22 @@
                 </div>
             </div>
         </div>
+
     @endsection
+
+    @push('myscript')
+        <script>
+            var timeDisplay = document.getElementById("time");
+
+
+            function refreshTime() {
+                var dateString = new Date().toLocaleString("id-ID", {
+                    timeZone: "Asia/Jakarta"
+                });
+                var formattedString = dateString.replace(", ", " - ");
+                timeDisplay.innerHTML = formattedString;
+            }
+
+            setInterval(refreshTime, 1000);
+        </script>
+    @endpush

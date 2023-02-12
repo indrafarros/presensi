@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employees;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -31,5 +32,15 @@ class AuthController extends Controller
         }
 
         return redirect('/');
+    }
+
+    public function profile()
+    {
+        if (Auth::guard('employee')) {
+            $user = Employees::where('nik', Auth::guard()->user()->nik)->with(['roles' => function ($query) {
+                $query->select('id', 'name');
+            }])->first(['nik', 'name', 'role_id', 'phone']);
+            return view('dashboard.profile', compact('user'));
+        }
     }
 }

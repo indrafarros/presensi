@@ -28,7 +28,7 @@
             <strong>Docs</strong>
         </div>
     </a>
-    <a href="javascript:;" class="item">
+    <a href="/profile" class="item @if (request()->route()->uri == 'profile') active @endif">
         <div class="col">
             <ion-icon name="people-outline" role="img" class="md hydrated" aria-label="people outline">
             </ion-icon>

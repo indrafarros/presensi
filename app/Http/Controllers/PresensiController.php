@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employees;
 use App\Models\Presensi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

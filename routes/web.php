@@ -24,6 +24,7 @@ Route::middleware(['guest:employee'])->group(function () {
 
 Route::middleware(['auth:employee'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/profile', [AuthController::class, 'profile']);
     Route::get('/presensi/create', [PresensiController::class, 'create']);
     Route::post('/presensi/store', [PresensiController::class, 'store']);
 
