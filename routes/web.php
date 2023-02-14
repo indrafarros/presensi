@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HistoryPresensiController;
 use App\Http\Controllers\PresensiController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,9 @@ Route::middleware(['auth:employee'])->group(function () {
     Route::get('/profile', [AuthController::class, 'profile']);
     Route::get('/presensi/create', [PresensiController::class, 'create']);
     Route::post('/presensi/store', [PresensiController::class, 'store']);
+
+    Route::get('/history', [HistoryPresensiController::class, 'show']);
+    Route::post('/history', [HistoryPresensiController::class, 'show']);
 
     Route::get('/logout', [AuthController::class, 'logout']);
 });
